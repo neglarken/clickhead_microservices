@@ -1,0 +1,13 @@
+app:
+  name: 'auth-ms'
+  version: '1.0'
+
+http:
+  port: ':8081'
+
+log:
+  level: 'debug'
+
+jwt:
+  accessTokenTTL: 10m
+  refreshTokenTTL: 1h

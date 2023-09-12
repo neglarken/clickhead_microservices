@@ -1,0 +1,9 @@
+app:
+  name: 'some-ms'
+  version: '1.0'
+
+http:
+  port: ':8080'
+
+log:
+  level: 'debug'
