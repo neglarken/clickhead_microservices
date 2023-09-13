@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package protobuf;
+
+option go_package = "./";
+
+service SomeMsService {
+    rpc Create(CreateItemRequest) returns (CreateItemResponse);
+
+    rpc Update(UpdateItemRequest) returns (UpdateItemResponse);  
+
+    rpc Delete(DeleteItemRequest) returns (DeleteItemResponse);   
+
+    //Возвращает список записей
+    rpc Get(GetItemRequest) returns (GetItemResponse);
+}
+
+message Item {
+    int32 Id = 1;
+    string Info = 2;
+    int64 Price = 3;
+}
+
+//create
+message CreateItemRequest{
+    string Info = 1;
+    int64 Price = 2; 
+}
+
+message CreateItemResponse{
+    int32 Id = 1;
+}
+
+//update
+message UpdateItemRequest{
+    int32 Id = 1;
+    string Info = 2;
+    int64 Price = 3;
+}
+
+message UpdateItemResponse{
+    Item Iten = 1;
+}
+
+//get
+message GetItemRequest{
+    
+}
+
+message GetItemResponse{
+    repeated Item Items = 1;
+}
+
+//delete
+message DeleteItemRequest{
+    int32 Id = 1;
+}
+
+message DeleteItemResponse{
+    int32 Id = 1;
+}

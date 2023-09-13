@@ -6,7 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/neglarken/clickhead/some-ms/config"
-	"github.com/neglarken/clickhead/some-ms/internal/httpserver"
+	"github.com/neglarken/clickhead/some-ms/internal/grpcserver"
 )
 
 var (
@@ -28,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := httpserver.Start(config); err != nil {
+	if err := grpcserver.Start(config); err != nil {
 		log.Fatal(err)
 	}
 }

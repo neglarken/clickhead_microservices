@@ -3,14 +3,14 @@ package repo
 import (
 	"database/sql"
 
-	"github.com/neglarken/clickhead/some-ms/internal/model"
+	pb "github.com/neglarken/clickhead/some-ms/protobuf"
 )
 
 type Item interface {
-	Create(item *model.Item) (int, error)
-	Edit(item *model.Item) error
-	Get() ([]*model.Item, error)
-	Delete(id int) error
+	Create(item *pb.CreateItemRequest) (int32, error)
+	Edit(item *pb.UpdateItemRequest) (*pb.Item, error)
+	Get() ([]*pb.Item, error)
+	Delete(id *pb.DeleteItemRequest) (int32, error)
 }
 
 type Repository struct {

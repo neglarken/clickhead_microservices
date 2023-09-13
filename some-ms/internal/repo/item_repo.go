@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/neglarken/clickhead/some-ms/internal/model"
+	pb "github.com/neglarken/clickhead/some-ms/protobuf"
 )
 
 type ItemRepository struct {
@@ -17,8 +17,8 @@ func NewItemRepository(db *sql.DB) *ItemRepository {
 	}
 }
 
-func (repo *ItemRepository) Create(item *model.Item) (int, error) {
-	var id int
+func (repo *ItemRepository) Create(item *pb.CreateItemRequest) (int32, error) {
+	var id int32
 	err := repo.DB.QueryRow(
 		"insert into items (info, price) values ($1, $2) returning id",
 		item.Info,
@@ -30,21 +30,23 @@ func (repo *ItemRepository) Create(item *model.Item) (int, error) {
 	return id, nil
 }
 
-func (repo *ItemRepository) Edit(item *model.Item) error {
-	return repo.DB.QueryRow(
+func (repo *ItemRepository) Edit(item *pb.UpdateItemRequest) (*pb.Item, error) {
+	res := &pb.Item{}
+	err := repo.DB.QueryRow(
 		"update items set info = $1, price = $2 where id = $3 returning id, info, price",
 		item.Info,
 		item.Price,
 		item.Id,
 	).Scan(
-		&item.Id,
-		&item.Info,
-		&item.Price,
+		&res.Id,
+		&res.Info,
+		&res.Price,
 	)
+	return res, err
 }
 
-func (repo *ItemRepository) Get() ([]*model.Item, error) {
-	items := make([]*model.Item, 0)
+func (repo *ItemRepository) Get() ([]*pb.Item, error) {
+	items := make([]*pb.Item, 0)
 	rows, err := repo.DB.Query(
 		"select * from items")
 	defer rows.Close()
@@ -52,7 +54,7 @@ func (repo *ItemRepository) Get() ([]*model.Item, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		item := &model.Item{}
+		item := &pb.Item{}
 		if err := rows.Scan(&item.Id, &item.Info, &item.Price); err != nil {
 			return nil, err
 		}
@@ -64,15 +66,16 @@ func (repo *ItemRepository) Get() ([]*model.Item, error) {
 	return items, nil
 }
 
-func (repo *ItemRepository) Delete(id int) error {
+func (repo *ItemRepository) Delete(id *pb.DeleteItemRequest) (int32, error) {
+	var resId int32
 	err := repo.DB.QueryRow(
-		"delete from items where id = $1 returning id", id,
-	).Scan(&id)
+		"delete from items where id = $1 returning id", id.Id,
+	).Scan(&resId)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return errors.New("not found any items")
+			return 0, errors.New("not found any items")
 		}
-		return err
+		return 0, err
 	}
-	return nil
+	return resId, nil
 }
