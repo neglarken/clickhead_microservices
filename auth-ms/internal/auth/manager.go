@@ -32,7 +32,8 @@ func (m *Manager) NewJWT(userId string, ttl time.Duration) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(ttl).Unix(),
 		Subject:   userId,
-	})
+	},
+	)
 
 	return token.SignedString([]byte(m.signingKey))
 }

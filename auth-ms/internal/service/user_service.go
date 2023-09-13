@@ -1,13 +1,16 @@
 package service
 
 import (
+	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/neglarken/clickhead/auth-ms/internal/auth"
 	"github.com/neglarken/clickhead/auth-ms/internal/hasher"
 	"github.com/neglarken/clickhead/auth-ms/internal/model"
 	"github.com/neglarken/clickhead/auth-ms/internal/repo"
+	pb "github.com/neglarken/clickhead/auth-ms/protobuf"
 )
 
 type UserService struct {
@@ -30,34 +33,51 @@ func NewUserService(userRepo repo.UserRepository, sessionRepo repo.SessionReposi
 	}
 }
 
-func (s *UserService) SignUp(u *model.User) error {
-	passwordHash, err := s.hasher.Hash(u.UnencryptedPassword)
+func (s *UserService) SignUp(u *pb.AuthRequest) error {
+	passwordHash, err := s.hasher.Hash(u.Password)
 	if err != nil {
 		return err
 	}
 
 	u.Password = passwordHash
 
-	if err := s.userRepo.Create(u); err != nil {
+	if err := s.userRepo.Create(
+		&model.User{
+			Login:    u.Login,
+			Password: u.Password,
+		},
+	); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *UserService) SignIn(u *model.User) (Tokens, error) {
-	passwordHash, err := s.hasher.Hash(u.UnencryptedPassword)
+func (s *UserService) SignIn(u *pb.AuthRequest) (*pb.TokenResponse, error) {
+	res := &pb.TokenResponse{}
+	passwordHash, err := s.hasher.Hash(u.Password)
 	if err != nil {
-		return Tokens{}, err
+		return res, err
 	}
 
 	u.Password = passwordHash
 
 	user, err := s.userRepo.FindByLogin(u.Login)
 	if err != nil {
-		return Tokens{}, err
+		return res, err
 	}
 
-	return s.createSession(user.Id)
+	if user.Password != u.Password {
+		log.Println(user.Password + "\n" + u.Password)
+		return res, errors.New("Wrong password or login")
+	}
+
+	tokens, err := s.createSession(user.Id)
+	if err != nil {
+		return res, err
+	}
+	res.AccessToken, res.RefreshToken = tokens.AccessToken, tokens.RefreshToken
+
+	return res, nil
 }
 
 func (s *UserService) SetSession(user_id int, ses *model.Session) error {

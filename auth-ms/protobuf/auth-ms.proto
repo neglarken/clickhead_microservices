@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package protobuf;
+
+option go_package = "./";
+
+service AuthMsService {
+    rpc SignIn (AuthRequest) returns (TokenResponse);
+
+    rpc SignUp (AuthRequest) returns (SignUpResponse);
+
+    rpc WhoAmI (AccessTokenRequest) returns (UserResponse);
+}
+
+message AuthRequest{
+    string Login = 1;
+    string Password = 2;
+}
+
+message SignUpResponse{
+    string Status = 1;
+}
+
+message TokenResponse{
+    string AccessToken = 1;
+    string RefreshToken = 2;
+}
+
+message AccessTokenRequest{
+    string AccessToken = 1;
+}
+
+message UserResponse{
+    int32 Id = 1;
+}
