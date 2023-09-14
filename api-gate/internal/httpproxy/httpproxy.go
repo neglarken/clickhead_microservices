@@ -14,6 +14,8 @@ import (
 	someMsService "github.com/neglarken/clickhead/api-gate/services/some-ms/protobuf"
 )
 
+var opts []grpc.DialOption
+
 func Start(cfg *config.Config) error {
 
 	grpcGwMux := runtime.NewServeMux()
@@ -24,7 +26,6 @@ func Start(cfg *config.Config) error {
 	//Подключение к сервису SomeMs
 	grpcSomeMsConn, err := grpc.Dial(
 		cfg.SomeMsServerAddress,
-		//grpc.WithPerRPCCredentials(&reqData{}),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	if err != nil {
@@ -66,15 +67,10 @@ func Start(cfg *config.Config) error {
 	//----------------------------------------------------------------
 	mux := http.NewServeMux()
 
-	mux.Handle("/api/v1/", grpcGwMux)
-	mux.HandleFunc("/", helloworld)
+	mux.Handle("/", grpcGwMux)
 
 	fmt.Println("starting HTTP server at " + cfg.Port)
 	return http.ListenAndServe(cfg.Port, mux)
-}
-
-func helloworld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "URL:", r.URL.String())
 }
 
 // func AccessLogInterceptor(
