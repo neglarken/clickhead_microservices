@@ -2,14 +2,28 @@ syntax = "proto3";
 
 package protobuf;
 
+import "google/api/annotations.proto";
+
 option go_package = "./";
 
 service AuthMsService {
-    rpc SignIn (AuthRequest) returns (TokenResponse);
+    rpc SignIn (AuthRequest) returns (TokenResponse){
+        option (google.api.http) = {
+            post: "/SignIn"
+        };
+    };
 
-    rpc SignUp (AuthRequest) returns (SignUpResponse);
+    rpc SignUp (AuthRequest) returns (SignUpResponse){
+        option (google.api.http) = {
+            post: "/SignUp"
+        };
+    };
 
-    rpc WhoAmI (AccessTokenRequest) returns (UserResponse);
+    rpc WhoAmI (AccessTokenRequest) returns (UserResponse){
+        option (google.api.http) = {
+            get: "/WhoAmI"
+        };
+    };
 }
 
 message AuthRequest{

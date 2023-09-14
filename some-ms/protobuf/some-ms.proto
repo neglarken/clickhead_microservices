@@ -2,17 +2,35 @@ syntax = "proto3";
 
 package protobuf;
 
+import "google/api/annotations.proto";
+
 option go_package = "./";
 
 service SomeMsService {
-    rpc Create(CreateItemRequest) returns (CreateItemResponse);
+    rpc Create(CreateItemRequest) returns (CreateItemResponse){
+        option (google.api.http) = {
+            post: "/items"
+        };
+    };
 
-    rpc Update(UpdateItemRequest) returns (UpdateItemResponse);  
+    rpc Update(UpdateItemRequest) returns (UpdateItemResponse){
+        option (google.api.http) = {
+            put: "/items"
+        };
+    }; 
 
-    rpc Delete(DeleteItemRequest) returns (DeleteItemResponse);   
+    rpc Delete(DeleteItemRequest) returns (DeleteItemResponse){
+        option (google.api.http) = {
+            delete: "/items"
+        };
+    };
 
     //Возвращает список записей
-    rpc Get(GetItemRequest) returns (GetItemResponse);
+    rpc Get(GetItemRequest) returns (GetItemResponse){
+        option (google.api.http) = {
+            get: "/items"
+        };
+    };
 }
 
 message Item {
