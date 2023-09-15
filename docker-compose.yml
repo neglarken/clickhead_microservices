@@ -1,0 +1,51 @@
+version: '1.0'
+
+services:
+
+  some-ms:
+    build: ./some-ms
+    command: ./wait-for-postgres.sh db ./main
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - some-ms/.env
+    
+  auth-ms:
+    build: ./auth-ms
+    command: ./wait-for-postgres.sh db ./main
+    ports:
+      - 8081:8081
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    env_file:
+      - auth-ms/.env
+
+  api-gate:
+    build: ./api-gate
+    command: ./main
+    ports:
+      - 8082:8082
+    depends_on:
+      - some-ms
+      - auth-ms
+    env_file:
+      - api-gate/.env
+
+  db:
+    restart: always
+    image: postgres:latest
+    volumes:
+    - ./data:/var/lib/postgresql/data
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"

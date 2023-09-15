@@ -2,19 +2,26 @@ package httpproxy
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 
 	"github.com/neglarken/clickhead/api-gate/config"
+	"github.com/neglarken/clickhead/api-gate/pkg/auth"
 	authMsService "github.com/neglarken/clickhead/api-gate/services/auth-ms/protobuf"
 	someMsService "github.com/neglarken/clickhead/api-gate/services/some-ms/protobuf"
 )
 
-var opts []grpc.DialOption
+var (
+	signingKey = "qwerty123"
+	opts       []grpc.DialOption
+)
 
 func Start(cfg *config.Config) error {
 
@@ -27,6 +34,7 @@ func Start(cfg *config.Config) error {
 	grpcSomeMsConn, err := grpc.Dial(
 		cfg.SomeMsServerAddress,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
+		grpc.WithUnaryInterceptor(AccessInterceptor),
 	)
 	if err != nil {
 		return fmt.Errorf("Failed to connect to User service: %s", err)
@@ -73,45 +81,46 @@ func Start(cfg *config.Config) error {
 	return http.ListenAndServe(cfg.Port, mux)
 }
 
-// func AccessLogInterceptor(
-// 	ctx context.Context,
-// 	method string,
-// 	req interface{},
-// 	reply interface{},
-// 	cc *grpc.ClientConn,
-// 	invoker grpc.UnaryInvoker,
-// 	opts ...grpc.CallOption,
-// ) error {
-// 	md,_:=metadata.FromOutgoingContext(ctx)
-// 	start:=time.Now()
+func AccessInterceptor(
+	ctx context.Context,
+	method string,
+	req interface{},
+	reply interface{},
+	cc *grpc.ClientConn,
+	invoker grpc.UnaryInvoker,
+	opts ...grpc.CallOption,
+) error {
+	md, _ := metadata.FromOutgoingContext(ctx)
 
-// 	var traceId,userId,userRole string
-// 	if len(md["authorization"])>0{
-// 		tokenString:= md["authorization"][0]
-// 		if tokenString!=""{
-// 			err,token:=userService.CheckGetJWTToken(tokenString)
-// 			if err!=nil{
-// 				return err
-// 			}
-// 			userId=fmt.Sprintf("%s",token["UserID"])
-// 			userRole=fmt.Sprintf("%s",token["UserRole"])
-// 		}
-// 	}
-// 	//Присваиваю ID запроса
-// 	traceId=fmt.Sprintf("%d",time.Now().UTC().UnixNano())
+	if len(md["authorization"]) == 0 {
+		return errors.New("authorization token is not provided")
+	}
+	tokenString := md["authorization"][0]
+	values := strings.Split(tokenString, " ")
+	if values[0] != "Bearer" {
+		return errors.New("token is not a Bearer token")
+	}
+	tokenString = values[1]
+	if tokenString == "" {
+		return errors.New("token is empty")
+	}
 
-// 	callContext:=context.Background()
-// 	mdOut:=metadata.Pairs(
-// 		"trace-id",traceId,
-// 		"user-id",userId,
-// 		"user-role",userRole,
-// 	)
-// 	callContext=metadata.NewOutgoingContext(callContext,mdOut)
+	userId, err := auth.Parse(tokenString, signingKey)
+	if err != nil {
+		return err
+	}
 
-// 	err:=invoker(callContext,method,req,reply,cc, opts...)
+	callContext := context.Background()
 
-// 	msg:=fmt.Sprintf("Call:%v, traceId: %v, userId: %v, userRole: %v, time: %v", method,traceId,userId,userRole,time.Since(start))
-// 	app.AccesLog(msg)
+	mdOut := metadata.Pairs(
+		"user-id", userId,
+	)
+	callContext = metadata.NewOutgoingContext(callContext, mdOut)
 
-// 	return err
-// }
+	err = invoker(callContext, method, req, reply, cc, opts...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
