@@ -4,6 +4,7 @@
 
 - [About](#about)
 - [Getting Started](#getting_started)
+- [Endpoints](#endpoints)
 
 ## About <a name = "about"></a>
 
@@ -15,3 +16,7 @@
 ```
 docker-compose up
 ```
+## Endpoints <a name = "endpoints"></a>
+
+Файл с запросами для постмана - clickhead.postman_collection.json
+

@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "09cebd65-3daa-4954-96cb-aa00a2d02b2b",
+		"name": "clickhead",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25992446"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Login\":\"\",\r\n    \"Password\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/SignUp"
+			},
+			"response": []
+		},
+		{
+			"name": "auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Login\":\"\",\r\n    \"Password\":\"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/SignIn"
+			},
+			"response": []
+		},
+		{
+			"name": "who am i",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "token"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/WhoAmI"
+			},
+			"response": []
+		},
+		{
+			"name": "create item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "token"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Info\":\"\",\r\n    \"Price\":0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/items"
+			},
+			"response": []
+		},
+		{
+			"name": "get items",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "token"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "token"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\": 1,\r\n    \"Info\":\"\",\r\n    \"Price\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/items"
+			},
+			"response": []
+		},
+		{
+			"name": "del item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "token"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Id\":0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http:/localhost:8082/items"
+			},
+			"response": []
+		}
+	]
+}
