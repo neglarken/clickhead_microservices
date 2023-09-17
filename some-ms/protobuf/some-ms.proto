@@ -10,18 +10,21 @@ service SomeMsService {
     rpc Create(CreateItemRequest) returns (CreateItemResponse){
         option (google.api.http) = {
             post: "/items"
+            body: "*"
         };
     };
 
     rpc Update(UpdateItemRequest) returns (UpdateItemResponse){
         option (google.api.http) = {
             put: "/items"
+            body: "*"
         };
     }; 
 
     rpc Delete(DeleteItemRequest) returns (DeleteItemResponse){
         option (google.api.http) = {
             delete: "/items"
+            body: "*"
         };
     };
 

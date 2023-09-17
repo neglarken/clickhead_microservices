@@ -10,12 +10,14 @@ service AuthMsService {
     rpc SignIn (AuthRequest) returns (TokenResponse){
         option (google.api.http) = {
             post: "/SignIn"
+            body: "*"
         };
     };
 
     rpc SignUp (AuthRequest) returns (SignUpResponse){
         option (google.api.http) = {
             post: "/SignUp"
+            body: "*"
         };
     };
 

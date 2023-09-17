@@ -2,6 +2,19 @@ version: '1.0'
 
 services:
 
+  db:
+    image: postgres:latest
+    volumes:
+    - ./data:/var/lib/postgresql/data
+    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
   some-ms:
     build: ./some-ms
     command: ./wait-for-postgres.sh db ./main
@@ -36,16 +49,3 @@ services:
       - auth-ms
     env_file:
       - api-gate/.env
-
-  db:
-    restart: always
-    image: postgres:latest
-    volumes:
-    - ./data:/var/lib/postgresql/data
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
-    ports:
-      - "5432:5432"

@@ -35,16 +35,12 @@
         },
         "parameters": [
           {
-            "name": "Login",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "Password",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protobufAuthRequest"
+            }
           }
         ],
         "tags": [
@@ -71,16 +67,12 @@
         },
         "parameters": [
           {
-            "name": "Login",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "Password",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protobufAuthRequest"
+            }
           }
         ],
         "tags": [
@@ -128,6 +120,17 @@
         }
       },
       "additionalProperties": {}
+    },
+    "protobufAuthRequest": {
+      "type": "object",
+      "properties": {
+        "Login": {
+          "type": "string"
+        },
+        "Password": {
+          "type": "string"
+        }
+      }
     },
     "protobufSignUpResponse": {
       "type": "object",

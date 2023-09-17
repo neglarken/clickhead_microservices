@@ -56,11 +56,12 @@
         },
         "parameters": [
           {
-            "name": "Id",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protobufDeleteItemRequest"
+            }
           }
         ],
         "tags": [
@@ -85,17 +86,12 @@
         },
         "parameters": [
           {
-            "name": "Info",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "Price",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protobufCreateItemRequest"
+            }
           }
         ],
         "tags": [
@@ -120,24 +116,12 @@
         },
         "parameters": [
           {
-            "name": "Id",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "Info",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "Price",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/protobufUpdateItemRequest"
+            }
           }
         ],
         "tags": [
@@ -156,6 +140,19 @@
       },
       "additionalProperties": {}
     },
+    "protobufCreateItemRequest": {
+      "type": "object",
+      "properties": {
+        "Info": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "create"
+    },
     "protobufCreateItemResponse": {
       "type": "object",
       "properties": {
@@ -164,6 +161,16 @@
           "format": "int32"
         }
       }
+    },
+    "protobufDeleteItemRequest": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "delete"
     },
     "protobufDeleteItemResponse": {
       "type": "object",
@@ -201,6 +208,23 @@
           "format": "int64"
         }
       }
+    },
+    "protobufUpdateItemRequest": {
+      "type": "object",
+      "properties": {
+        "Id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "Info": {
+          "type": "string"
+        },
+        "Price": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "update"
     },
     "protobufUpdateItemResponse": {
       "type": "object",
