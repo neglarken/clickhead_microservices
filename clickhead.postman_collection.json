@@ -13,14 +13,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Login\":\"\",\r\n    \"Password\":\"\"\r\n}",
+					"raw": "{\r\n    \"Login\":\"test\",\r\n    \"Password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http:/localhost:8082/SignUp"
+				"url": "http://localhost:8082/SignUp"
 			},
 			"response": []
 		},
@@ -31,14 +31,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Login\":\"\",\r\n    \"Password\":\"\"\r\n}",
+					"raw": "{\r\n    \"Login\":\"test\",\r\n    \"Password\":\"test\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http:/localhost:8082/SignIn"
+				"url": "http://localhost:8082/SignIn"
 			},
 			"response": []
 		},
@@ -51,7 +51,7 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "token"
+						"token": "access_token"
 					}
 				},
 				"method": "GET",
@@ -65,7 +65,7 @@
 						}
 					}
 				},
-				"url": "http:/localhost:8082/WhoAmI"
+				"url": "http://localhost:8082/WhoAmI"
 			},
 			"response": []
 		},
@@ -75,21 +75,21 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "token"
+						"token": "access_token"
 					}
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Info\":\"\",\r\n    \"Price\":0\r\n}",
+					"raw": "{\r\n    \"Info\":\"test\",\r\n    \"Price\":1337\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http:/localhost:8082/items"
+				"url": "http://localhost:8082/items"
 			},
 			"response": []
 		},
@@ -102,7 +102,7 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "token"
+						"token": "access_token"
 					}
 				},
 				"method": "GET",
@@ -115,7 +115,8 @@
 							"language": "json"
 						}
 					}
-				}
+				},
+				"url": "http://localhost:8082/items"
 			},
 			"response": []
 		},
@@ -125,21 +126,21 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "token"
+						"token": "access_token"
 					}
 				},
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Id\": 1,\r\n    \"Info\":\"\",\r\n    \"Price\": 0\r\n}",
+					"raw": "{\r\n    \"Id\": 2,\r\n    \"Info\":\"test1\",\r\n    \"Price\": 1111\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http:/localhost:8082/items"
+				"url": "http://localhost:8082/items"
 			},
 			"response": []
 		},
@@ -149,21 +150,21 @@
 				"auth": {
 					"type": "bearer",
 					"bearer": {
-						"token": "token"
+						"token": "access_token"
 					}
 				},
 				"method": "DELETE",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Id\":0\r\n}",
+					"raw": "{\r\n    \"Id\":1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http:/localhost:8082/items"
+				"url": "http://localhost:8082/items"
 			},
 			"response": []
 		}
